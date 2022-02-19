@@ -105,10 +105,10 @@ export default {
       this.currentPage = Number(this.$route.query.page);
       const blogs = await this.$strapi.find('blogs', { populate: '*', 'pagination[page]': this.currentPage, 'pagination[pageSize]': this.pageSize } );
       for(let i=0; i < blogs.data.length; i++) {
-        if(!blogs.data[i].attributes.image) {
-          blogs.data[i].attributes.thumbnail = context.$config.baseUrl + '/images/default.png';
+        if(!blogs.data[i].attributes.image.data) {
+          blogs.data[i].attributes.thumbnail = this.$config.baseUrl + '/images/default.png';
         } else {
-          blogs.data[i].attributes.thumbnail = context.$config.baseUrl + blogs.data[i].attributes.image.data.attributes.formats.thumbnail.url
+          blogs.data[i].attributes.thumbnail = this.$config.baseUrl + blogs.data[i].attributes.image.data.attributes.formats.thumbnail.url
         }
       }
       this.blogs = blogs.data;
