@@ -10,7 +10,7 @@
               <article v-for="(blog, index) in blogs" :key="index" class="hentry">
                 <div class="hentry-thumbnail">
                   <NuxtLink :to="`/blogs/${blog.id}`">
-                    <img :src="baseUrl + blog.attributes.image.data.attributes.formats.thumbnail.url" alt="">
+                    <img :src="blog.attributes.thumbnail" alt="">
                   </NuxtLink>
                 </div>
                 <div class="hentry-content">
@@ -85,6 +85,13 @@ export default {
     let currentPage = context.route.query.page ? Number(context.route.query.page) : 1;
     let pageSize = 5;
     const blogs = await context.$strapi.find('blogs', { populate: '*', 'pagination[page]': currentPage, 'pagination[pageSize]': pageSize } );
+    for(let i=0; i < blogs.data.length; i++) {
+      if(!blogs.data[i].attributes.image.data) {
+        blogs.data[i].attributes.thumbnail = context.$config.baseUrl + '/images/default.png';
+      } else {
+        blogs.data[i].attributes.thumbnail = context.$config.baseUrl + blogs.data[i].attributes.image.data.attributes.formats.thumbnail.url;
+      }
+    }
     return {
       blogs: blogs.data,
       baseUrl: context.$config.baseUrl,
@@ -97,6 +104,13 @@ export default {
     async clickCallback() {
       this.currentPage = Number(this.$route.query.page);
       const blogs = await this.$strapi.find('blogs', { populate: '*', 'pagination[page]': this.currentPage, 'pagination[pageSize]': this.pageSize } );
+      for(let i=0; i < blogs.data.length; i++) {
+        if(!blogs.data[i].attributes.image) {
+          blogs.data[i].attributes.thumbnail = context.$config.baseUrl + '/images/default.png';
+        } else {
+          blogs.data[i].attributes.thumbnail = context.$config.baseUrl + blogs.data[i].attributes.image.data.attributes.formats.thumbnail.url
+        }
+      }
       this.blogs = blogs.data;
     }
    },
