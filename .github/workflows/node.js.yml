@@ -25,8 +25,12 @@ jobs:
     - run: |
         cd backend
         npm i
-        npm build
+        npm run build
+        pm2 stop strapi_test_back
+        pm2 start strapi_test_back
         cd ../frontend
         npm i
-        npm build
+        npm run build
+        pm2 stop strapi_test_front
+        pm2 start strapi_test_front --env production
     
