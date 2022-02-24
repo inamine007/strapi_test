@@ -23,11 +23,7 @@ jobs:
       #   node-version: ${{ matrix.node-version }}
       #   cache: 'npm'
     - run: |
-        cd backend
-        npm i
-        npm run build
-        pm2 restart strapi_test_back
-        cd ../frontend
+        cd frontend
         npm i
         npm run build
         pm2 restart strapi_test_front
